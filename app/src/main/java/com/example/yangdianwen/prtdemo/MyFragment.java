@@ -2,7 +2,6 @@ package com.example.yangdianwen.prtdemo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;
 
@@ -26,7 +26,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 /**
  * Created by yangdianwen on 16-7-1.
  */
-public class MyFragment extends Fragment implements Iview{
+public class MyFragment extends MvpFragment<Iview,Presenter> implements Iview{
     @Bind(R.id.lvRepos)ListView listView;
     @Bind(R.id.ptrClassicFrameLayout)
     PtrClassicFrameLayout ptrClassicFrameLayout;
@@ -35,19 +35,24 @@ public class MyFragment extends Fragment implements Iview{
     private ArrayAdapter adapter;
     private  FooteView footerview;
     private static final String TAG = "MyFragment";
-     private Presenter presenter;
+
+    @Override
+    public Presenter createPresenter() {
+        return null;
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this,view);
         adapter=new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1);
         listView.setAdapter(adapter);
-        presenter=new Presenter(this);
+
         ptrClassicFrameLayout.setPtrHandler(new PtrDefaultHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
                 //开始执行加载数据的方法
-               presenter.loadData();
+              getPresenter() .loadData();
             }
         });
         footerview=new FooteView(getContext());
@@ -56,7 +61,7 @@ public class MyFragment extends Fragment implements Iview{
             @Override
             public void onLoadMore() {
                 Log.d(TAG, "onLoadMore:加载数据。。");
-                presenter.loadMoreData();
+                getPresenter().loadMoreData();
             }
             @Override
             public boolean isLoading() {

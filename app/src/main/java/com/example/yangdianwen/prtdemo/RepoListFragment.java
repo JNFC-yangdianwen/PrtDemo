@@ -2,7 +2,6 @@ package com.example.yangdianwen.prtdemo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;
 
@@ -26,7 +26,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 /**
  * Created by yangdianwen on 16-7-2.
  */
-public class RepoListFragment extends Fragment implements  Iview {
+public class RepoListFragment extends MvpFragment<Iview,Presenter> implements Iview{
 
     @Bind(R.id.ptrClassicFrameLayout)
     PtrClassicFrameLayout ptrFrameLayout;
@@ -45,6 +45,11 @@ public class RepoListFragment extends Fragment implements  Iview {
         return inflater.inflate(R.layout.fragment_repo_list, container, false);
     }
 
+    @Override
+    public Presenter createPresenter() {
+        return new Presenter();
+    }
+
     @Override public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
@@ -52,10 +57,9 @@ public class RepoListFragment extends Fragment implements  Iview {
         adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
         listView.setAdapter(adapter);
         // 下拉刷新
-        presenter=new Presenter(this);
         ptrFrameLayout.setPtrHandler(new PtrDefaultHandler() {
             @Override public void onRefreshBegin(PtrFrameLayout frame) {
-                presenter.loadData();
+                getPresenter().loadData();
             }
         });
         footerView = new FooteView(getContext());
@@ -63,8 +67,7 @@ public class RepoListFragment extends Fragment implements  Iview {
         Mugen.with(listView, new MugenCallbacks() {
             @Override
             public void onLoadMore() {
-                Toast.makeText(getContext(), "loadmore", Toast.LENGTH_SHORT).show();
-                presenter.loadMoreData();
+                getPresenter().loadMoreData();
             }
             // 是否正在加载，此方法用来避免重复加载
             @Override public boolean isLoading() {
