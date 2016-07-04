@@ -11,6 +11,13 @@ import java.util.Random;
 /**
  * Created by yangdianwen on 16-7-2.
  *这是mvp设计模式中的业务逻辑层，
+ * 使用第三方的mvp库，在应用中添加mosby 依赖
+ *      “compile 'com.hannesdorfmann.mosby:mvp:2.0.1'”
+ *   让你的fragment继承Mvpfragment<View,Present>，实现你的view接口,必须重写父类的createPresenter（）方法，返回你的Persenter对象即可
+ *   让你的view继承Mvpview
+ *   让你的present继承MvpPresenter :MvpNullObjectBasePresenter<View>
+ *   使用getView 获取你的view
+ *   使用getPresenter获取你的Presenter
  */
 public class Presenter extends MvpNullObjectBasePresenter<Iview>{
     //下拉刷新加载数据的方法，使用异步处理机制

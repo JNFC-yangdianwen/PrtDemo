@@ -35,11 +35,8 @@ public class RepoListFragment extends MvpFragment<Iview,Presenter> implements Iv
     @Bind(R.id.emptyView)
     TextView emptyView;
     @Bind(R.id.errorView) TextView errorView;
-
     private ArrayAdapter<String> adapter;
-
     private FooteView footerView; // 上拉加载更多的视图
-    private Presenter presenter ;
     @Nullable
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_repo_list, container, false);
